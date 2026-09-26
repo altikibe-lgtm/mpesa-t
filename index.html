@@ -38,10 +38,12 @@
             display: flex;
             justify-content: center;
             align-items: stretch;
-            user-select: none;
             -webkit-user-select: none;
+            user-select: none;
         }
 
+        /* Fallback so Android WebView that ignores env() in calc() still
+           gets sane padding and never collapses to a white screen. */
         .container {
             width: 100%;
             max-width: 480px;
@@ -50,10 +52,16 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: calc(env(safe-area-inset-top, 0px) + 24px) 24px
-                     calc(env(safe-area-inset-bottom, 0px) + 16px) 24px;
+            padding: 24px 24px 16px 24px;
             background-color: var(--bg-color);
             position: relative;
+        }
+
+        @supports (padding: env(safe-area-inset-top)) {
+            .container {
+                padding: calc(env(safe-area-inset-top, 0px) + 24px) 24px
+                         calc(env(safe-area-inset-bottom, 0px) + 16px) 24px;
+            }
         }
 
         .top-section {
@@ -183,6 +191,8 @@
             transition: background-color 0.15s;
             -webkit-user-select: none;
             user-select: none;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .key:active {
@@ -205,8 +215,7 @@
         /* Small phones (iPhone SE etc.) */
         @media (max-height: 700px) {
             .container {
-                padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px
-                         calc(env(safe-area-inset-bottom, 0px) + 12px) 20px;
+                padding: 16px 20px 12px 20px;
             }
             h1 {
                 font-size: 20px;
@@ -251,6 +260,15 @@
             }
         }
 
+        @media (max-height: 700px) {
+            @supports (padding: env(safe-area-inset-top)) {
+                .container {
+                    padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px
+                             calc(env(safe-area-inset-bottom, 0px) + 12px) 20px;
+                }
+            }
+        }
+
         /* Very small height (landscape or tiny phones) */
         @media (max-height: 580px) {
             h1 {
@@ -288,9 +306,9 @@
     <div class="container">
         <div class="top-section">
             <h1>Enter your M-PESA PIN</h1>
-            
+
             <div class="avatar">DY</div>
-            
+
             <div class="username">Dickson Yegon</div>
             <div class="phone">011****26</div>
 
@@ -314,20 +332,21 @@
         </div>
 
         <div class="keypad">
-            <button class="key" data-value="1">1</button>
-            <button class="key" data-value="2">2</button>
-            <button class="key" data-value="3">3</button>
-            <button class="key" data-value="4">4</button>
-            <button class="key" data-value="5">5</button>
-            <button class="key" data-value="6">6</button>
-            <button class="key" data-value="7">7</button>
-            <button class="key" data-value="8">8</button>
-            <button class="key" data-value="9">9</button>
-            <button class="key" id="biometricBtn" title="Biometric Login">
-                <img src="finger.png" alt="Fingerprint" class="fingerprint-img" onerror="this.style.display='none'; this.parentElement.textContent='☝';">
+            <button class="key" type="button" data-value="1">1</button>
+            <button class="key" type="button" data-value="2">2</button>
+            <button class="key" type="button" data-value="3">3</button>
+            <button class="key" type="button" data-value="4">4</button>
+            <button class="key" type="button" data-value="5">5</button>
+            <button class="key" type="button" data-value="6">6</button>
+            <button class="key" type="button" data-value="7">7</button>
+            <button class="key" type="button" data-value="8">8</button>
+            <button class="key" type="button" data-value="9">9</button>
+            <button class="key" type="button" id="biometricBtn" title="Biometric Login">
+                <img src="finger.png" alt="Fingerprint" class="fingerprint-img"
+                     onerror="this.style.display='none'; this.parentElement.textContent='☝';">
             </button>
-            <button class="key" data-value="0">0</button>
-            <button class="key" id="deleteBtn" title="Delete">
+            <button class="key" type="button" data-value="0">0</button>
+            <button class="key" type="button" id="deleteBtn" title="Delete">
                 <svg viewBox="0 0 24 24">
                     <path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9 .89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.67-7H22v14zm-11.59-9.41L13 11.59l2.59-2.6c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41L14.41 13l2.6 2.59c.39.39.39 1.02 0 1.41-.39.39-1.02.39-1.41 0L13 14.41l-2.59 2.6c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41L11.59 13 9 10.41c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0z"></path>
                 </svg>
@@ -335,77 +354,108 @@
         </div>
     </div>
 
+    <noscript>
+        <div style="padding:16px;text-align:center;color:#5f6368;font-family:sans-serif;">
+            JavaScript is disabled. Please enable JavaScript to enter your PIN.
+        </div>
+    </noscript>
+
     <script>
-        (function() {
+        (function () {
             'use strict';
 
-            var pin = [];
-            var maxPinLength = 4;
-            var correctPin = '2580';
-            var pinBoxes = document.querySelectorAll('.pin-box');
-            var keys = document.querySelectorAll('.key[data-value]');
-            var deleteBtn = document.getElementById('deleteBtn');
-            var biometricBtn = document.getElementById('biometricBtn');
+            function init() {
+                try {
+                    var pin = [];
+                    var maxPinLength = 4;
+                    var correctPin = '2580';
+                    var pinBoxes = document.querySelectorAll('.pin-box');
+                    var keys = document.querySelectorAll('.key[data-value]');
+                    var deleteBtn = document.getElementById('deleteBtn');
+                    var biometricBtn = document.getElementById('biometricBtn');
 
-            function updatePinDisplay() {
-                pinBoxes.forEach(function(box, index) {
-                    box.innerHTML = '';
-                    if (index < pin.length) {
-                        var dot = document.createElement('div');
-                        dot.className = 'pin-dot';
-                        box.appendChild(dot);
-                        box.classList.add('filled');
-                    } else {
-                        box.classList.remove('filled');
-                    }
-                });
-
-                if (pin.length === maxPinLength) {
-                    setTimeout(function() {
-                        if (pin.join('') === correctPin) {
-                            window.location.href = 'login.html';
-                        } else {
-                            alert('Incorrect PIN. Please try again.');
-                            pin = [];
-                            updatePinDisplay();
+                    function updatePinDisplay() {
+                        for (var i = 0; i < pinBoxes.length; i++) {
+                            var box = pinBoxes[i];
+                            box.innerHTML = '';
+                            if (i < pin.length) {
+                                var dot = document.createElement('div');
+                                dot.className = 'pin-dot';
+                                box.appendChild(dot);
+                                box.classList.add('filled');
+                            } else {
+                                box.classList.remove('filled');
+                            }
                         }
-                    }, 200);
+
+                        if (pin.length === maxPinLength) {
+                            setTimeout(function () {
+                                if (pin.join('') === correctPin) {
+                                    window.location.href = 'login.html';
+                                } else {
+                                    alert('Incorrect PIN. Please try again.');
+                                    pin = [];
+                                    updatePinDisplay();
+                                }
+                            }, 200);
+                        }
+                    }
+
+                    for (var k = 0; k < keys.length; k++) {
+                        (function (key) {
+                            key.addEventListener('click', function (e) {
+                                e.preventDefault();
+                                if (pin.length < maxPinLength) {
+                                    pin.push(key.getAttribute('data-value'));
+                                    updatePinDisplay();
+                                }
+                            });
+                        })(keys[k]);
+                    }
+
+                    if (deleteBtn) {
+                        deleteBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            if (pin.length > 0) {
+                                pin.pop();
+                                updatePinDisplay();
+                            }
+                        });
+                    }
+
+                    if (biometricBtn) {
+                        biometricBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            alert('Biometric authentication triggered.');
+                        });
+                    }
+
+                    window.addEventListener('keydown', function (e) {
+                        if (e.key >= '0' && e.key <= '9') {
+                            if (pin.length < maxPinLength) {
+                                pin.push(e.key);
+                                updatePinDisplay();
+                            }
+                        } else if (e.key === 'Backspace') {
+                            if (pin.length > 0) {
+                                pin.pop();
+                                updatePinDisplay();
+                            }
+                        }
+                    });
+                } catch (err) {
+                    // Never allow a JS failure to blank the page.
+                    if (window.console && console.error) {
+                        console.error('PIN pad init failed:', err);
+                    }
                 }
             }
 
-            keys.forEach(function(key) {
-                key.addEventListener('click', function() {
-                    if (pin.length < maxPinLength) {
-                        pin.push(key.getAttribute('data-value'));
-                        updatePinDisplay();
-                    }
-                });
-            });
-
-            deleteBtn.addEventListener('click', function() {
-                if (pin.length > 0) {
-                    pin.pop();
-                    updatePinDisplay();
-                }
-            });
-
-            biometricBtn.addEventListener('click', function() {
-                alert('Biometric authentication triggered.');
-            });
-
-            window.addEventListener('keydown', function(e) {
-                if (e.key >= '0' && e.key <= '9') {
-                    if (pin.length < maxPinLength) {
-                        pin.push(e.key);
-                        updatePinDisplay();
-                    }
-                } else if (e.key === 'Backspace') {
-                    if (pin.length > 0) {
-                        pin.pop();
-                        updatePinDisplay();
-                    }
-                }
-            });
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
         })();
     </script>
 </body>
