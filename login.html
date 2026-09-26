@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>M-PESA App Clone</title>
+  <style>
+    /* ============================================
+       CSS VARIABLES & RESET
+       ============================================ */
+    :root {
+      --primary-green: #35A853;
+      --bright-green: #00D95F;
+      --red-accent: #E31B3B;
+      --blue-accent: #18A9E5;
+      --page-bg: #F3F5F8;
+      --card-bg: #FFFFFF;
+      --text-primary: #252525;
+      --text-secondary: #777777;
+      --skeleton-base: #E8EAED;
+      --skeleton-shine: #F5F6F8;
+      --hidden-base: #E2E6EA;
+      --hidden-shine: #F0F2F5;
+      --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --radius-card: 22px;
+      --radius-btn: 12px;
+      --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: var(--card-bg);
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
+    }
+
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background-color: var(--page-bg);
+      font-family: var(--font-family);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ============================================
+       APP CONTAINER
+       ============================================ */
+    .app-container {
+      max-width: 100%;
+      margin: 0 auto;
+      background-color: var(--page-bg);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      padding-bottom: 24px;
+    }
+
+    @media (min-width: 480px) {
+      .app-container {
+        max-width: 430px;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.06);
+      }
+    }
+
+    /* ============================================
+       A. TOP HEADER
+       ============================================ */
+    .header {
+      background: var(--card-bg);
+      padding: 14px 16px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      margin-top: calc(-1 * var(--safe-top));
+      padding-top: calc(14px + var(--safe-top));
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #FCE9F0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      color: #C2185B;
+      letter-spacing: 0.5px;
+      line-height: 1;
+      border: none;
+      box-shadow: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+    }
+
+    .avatar-badge {
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+      width: 17px;
+      height: 17px;
+      background: var(--primary-green);
+      border-radius: 50%;
+      border: 2px solid #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    .avatar-badge svg {
+      width: 9px;
+      height: 9px;
+      fill: none;
+      stroke: #FFFFFF;
+    }
+
+    .greeting {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      gap: 1px;
+    }
+
+    .greeting-top {
+      font-size: 17px;
+      color: #555555;
+      font-weight: 400;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .greeting-name {
+      font-size: 26px;
+      font-weight: 300;
+      color: #1A1A1A;
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.4px;
+    }
+
+    .greeting-name .wave-emoji {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .icon-btn:active {
+      background: #F5F6F8;
+    }
+
+    .icon-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 10px;
+      height: 10px;
+      background: var(--red-accent);
+      border-radius: 50%;
+      border: 1.5px solid #FFFFFF;
+    }
+
+    /* ============================================
+       B. BALANCE CARD CAROUSEL
+       ============================================ */
+    .carousel-section {
+      padding: 14px 0 0 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-right: 14px;
+      padding-bottom: 4px;
+    }
+
+    .carousel-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .balance-card {
+      flex: 0 0 85%;
+      max-width: 350px;
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      padding: 18px 18px 18px;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 0 L180 40 L220 20 L240 80 L200 120 L240 180 L180 200 L140 240 L80 200 L40 240 L0 180 L40 120 L0 60 Z' fill='none' stroke='%23edf2f0' stroke-width='0.5'/%3E%3Cpath d='M60 0 L120 60 L80 100 L140 140 L100 180 L160 200 L120 240 L60 200 L20 240 L0 160 L40 100 Z' fill='none' stroke='%23edf2f0' stroke-width='0.5'/%3E%3Cpath d='M180 0 L220 60 L180 100 L240 140 L200 180 L240 220 L180 240 L140 200 L100 240 L60 180 Z' fill='none' stroke='%23edf2f0' stroke-width='0.5'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      background-position: 100px 20px;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.9;
+    }
+
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 5px;
+      border-radius: var(--radius-card) 0 0 var(--radius-card);
+      background: linear-gradient(180deg, var(--bright-green) 0%, var(--primary-green) 45%, var(--blue-accent) 55%, var(--blue-accent) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .balance-card > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .balance-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--primary-green);
+      margin-bottom: 12px;
+      letter-spacing: 0.1px;
+    }
+
+    .balance-amount-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+      min-height: 30px;
+    }
+
+    .balance-amount {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .balance-amount.hidden {
+      display: none;
+    }
+
+    .balance-hidden-placeholder {
+      display: none;
+      width: 120px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, var(--hidden-base) 25%, var(--hidden-shine) 50%, var(--hidden-base) 75%);
+      background-size: 200% 100%;
+      animation: shimmer-hidden 2s infinite;
+    }
+
+    .balance-hidden-placeholder.visible {
+      display: block;
+    }
+
+    .fuliza-hidden-placeholder {
+      display: none;
+      width: 180px;
+      height: 16px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--hidden-base) 25%, var(--hidden-shine) 50%, var(--hidden-base) 75%);
+      background-size: 200% 100%;
+      animation: shimmer-hidden 2s infinite;
+      margin-bottom: 14px;
+    }
+
+    .fuliza-hidden-placeholder.visible {
+      display: block;
+    }
+
+    @keyframes shimmer-hidden {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .eye-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .eye-btn:active {
+      background: rgba(0,0,0,0.05);
+    }
+
+    .eye-btn svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .fuliza-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-bottom: 14px;
+      min-height: 16px;
+    }
+
+    .view-statements-btn {
+      display: block;
+      width: 100%;
+      padding: 13px 0;
+      background: transparent;
+      border: 1.5px solid var(--primary-green);
+      border-radius: 12px;
+      color: var(--primary-green);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font-family);
+      cursor: pointer;
+      transition: background 0.2s;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .view-statements-btn:active {
+      background: rgba(53, 168, 83, 0.06);
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-amount {
+      width: 100px;
+      height: 28px;
+      border-radius: 8px;
+    }
+
+    .skeleton-fuliza {
+      width: 160px;
+      height: 16px;
+      border-radius: 6px;
+    }
+
+    .skeleton-hidden {
+      display: none !important;
+    }
+
+    .balance-card.secondary {
+      flex: 0 0 55%;
+      max-width: 260px;
+      min-height: 170px;
+    }
+
+    .balance-card.secondary .balance-label {
+      color: var(--primary-green);
+    }
+
+    /* ============================================
+       C. CAROUSEL INDICATORS
+       ============================================ */
+    .carousel-indicators {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 0 4px;
+    }
+
+    .indicator {
+      height: 5px;
+      border-radius: 3px;
+      background: #D1D5DB;
+      transition: all 0.3s ease;
+    }
+
+    .indicator.active {
+      width: 22px;
+      background: var(--primary-green);
+    }
+
+    .indicator.inactive {
+      width: 5px;
+      background: #D1D5DB;
+    }
+
+    /* ============================================
+       D. QUICK ACTIONS CARD
+       ============================================ */
+    .quick-actions-card {
+      margin: 16px 14px 0;
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      padding: 20px 12px 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quick-actions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 0 6px;
+    }
+
+    .quick-actions-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .view-all {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-green);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .view-all svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--primary-green);
+    }
+
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      row-gap: 20px;
+      column-gap: 2px;
+    }
+
+    .quick-action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-family: var(--font-family);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .quick-action-item:active .qa-icon {
+      transform: scale(0.95);
+    }
+
+    .qa-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #F5F6F8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .qa-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    /* Default PNG icon sizing (for withdraw) */
+    .qa-icon img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Larger PNG icons for Send Money and Lipa na M-PESA */
+    .qa-icon img.qa-icon-lg {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+
+    /* Round Pochi icon — smaller circle inside the container circle */
+    .qa-icon img.qa-icon-round {
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    /* Circular image icons for Buy Bundles, Tunukiwa, Home Internet, Airtime */
+    .qa-icon img.qa-icon-circle {
+      width: 32px;
+      height: 32px;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    /* Dedicated sizing for Send Money & Lipa na M-PESA (Code 1 proportions) */
+    .qa-icon.qa-icon-code1 {
+      width: 52px;
+      height: 52px;
+    }
+
+    .qa-icon.qa-icon-code1 img.qa-icon-lg {
+      width: 34px;
+      height: 34px;
+    }
+
+    .qa-label {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-primary);
+      text-align: center;
+      line-height: 1.3;
+      max-width: 70px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    /* ============================================
+       E. FREQUENTS CARD
+       ============================================ */
+    .frequents-card {
+      margin: 14px 14px 0;
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      padding: 18px 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .frequents-card:active {
+      background: #FAFBFC;
+    }
+
+    .frequents-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .frequents-chevron {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+      color: #333;
+    }
+
+    .frequents-chevron.open {
+      transform: rotate(180deg);
+    }
+
+    .frequents-chevron svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .frequents-content {
+      margin: 0 14px;
+      background: var(--card-bg);
+      border-radius: 0 0 var(--radius-card) var(--radius-card);
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      box-shadow: var(--shadow-sm);
+      margin-top: -4px;
+    }
+
+    .frequents-content.open {
+      max-height: 200px;
+      padding: 8px 18px 16px;
+    }
+
+    .frequents-content p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       F. EXPLORE & DISCOVER DEALS
+       ============================================ */
+    .explore-section {
+      margin: 22px 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explore-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .explore-emoji {
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    /* ============================================
+       G. DEAL BANNER
+       ============================================ */
+    .banner-wrapper {
+      margin: 12px 14px 0;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+      background: #0B5D2E;
+      min-height: 150px;
+      aspect-ratio: 16 / 7;
+    }
+
+    .banner-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .banner-fallback {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0B5D2E 0%, #14803E 50%, #0B5D2E 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.5px;
+    }
+
+    /* ============================================
+       H. SCAN TO PAY FLOATING BUTTON
+       ============================================ */
+    .scan-pay-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: #FFFFFF;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 20px 14px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+      z-index: 10;
+      font-family: var(--font-family);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .scan-pay-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .scan-pay-btn .qr-icon {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    .scan-pay-btn .scan-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    /* ============================================
+       I. FLOATING ASSISTANT BUTTON
+       ============================================ */
+    .assistant-btn {
+      position: absolute;
+      bottom: 95px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.15s ease;
+    }
+
+    .assistant-btn:active {
+      transform: scale(0.95);
+    }
+
+    .assistant-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .assistant-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #E8F0FE, #D2E3FC);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      border-radius: 50%;
+    }
+
+    /* ============================================
+       UTILITY / MISC
+       ============================================ */
+    .hidden {
+      display: none !important;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 360px) {
+      .quick-action-item .qa-label {
+        font-size: 10px;
+      }
+      .qa-icon {
+        width: 44px;
+        height: 44px;
+      }
+      .qa-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+      .qa-icon img {
+        width: 20px;
+        height: 20px;
+      }
+      .qa-icon img.qa-icon-lg {
+        width: 26px;
+        height: 26px;
+      }
+      .qa-icon img.qa-icon-round {
+        width: 26px;
+        height: 26px;
+      }
+      .qa-icon img.qa-icon-circle {
+        width: 28px;
+        height: 28px;
+      }
+      .balance-card {
+        flex: 0 0 88%;
+        padding: 14px 14px 16px;
+      }
+      .balance-amount {
+        font-size: 24px;
+      }
+      .header {
+        padding: 12px 14px 12px;
+        padding-top: calc(12px + var(--safe-top));
+        margin-top: calc(-1 * var(--safe-top));
+      }
+      .avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 13px;
+        letter-spacing: 0.4px;
+      }
+      .avatar-badge {
+        width: 15px;
+        height: 15px;
+      }
+      .avatar-badge svg {
+        width: 8px;
+        height: 8px;
+      }
+      .greeting-top {
+        font-size: 15px;
+      }
+      .greeting-name {
+        font-size: 22px;
+      }
+      .greeting-name .wave-emoji {
+        font-size: 19px;
+      }
+      .icon-btn {
+        width: 42px;
+        height: 42px;
+      }
+      .icon-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+      .quick-actions-card {
+        padding: 18px 10px 20px;
+        margin: 14px 12px 0;
+      }
+      .frequents-card {
+        padding: 16px 16px;
+        margin: 14px 12px 0;
+      }
+      .explore-section {
+        margin: 20px 12px 0;
+      }
+      .banner-wrapper {
+        margin: 12px 12px 0;
+      }
+      .scan-pay-btn {
+        padding: 12px 16px 12px 12px;
+        bottom: 16px;
+        right: 16px;
+      }
+      .scan-pay-btn .scan-text {
+        font-size: 15px;
+      }
+      .scan-pay-btn .qr-icon {
+        width: 28px;
+        height: 28px;
+      }
+      .assistant-btn {
+        width: 54px;
+        height: 54px;
+        bottom: 88px;
+        right: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+
+  <!-- ============================================
+       A. TOP HEADER
+       ============================================ -->
+  <header class="header">
+    <div class="header-left">
+      <div class="avatar-wrapper">
+        <div class="avatar">DY</div>
+        <div class="avatar-badge">
+          <svg viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="greeting">
+        <span class="greeting-top">Good afternoon,</span>
+        <span class="greeting-name">Dickson <span class="wave-emoji">👋</span></span>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="notification-dot"></span>
+      </button>
+      <button class="icon-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#35A853" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================
+       B. BALANCE CARD CAROUSEL
+       ============================================ -->
+  <section class="carousel-section">
+    <div class="carousel-track" id="carouselTrack">
+
+      <!-- First Balance Card -->
+      <div class="balance-card" id="balanceCard">
+        <div class="balance-label">M-PESA Balance</div>
+        <div class="balance-amount-row">
+          <!-- Balance is hidden by default via class "hidden" -->
+          <div class="balance-amount hidden" id="balanceAmount">Ksh 11.62</div>
+          
+          <!-- Hidden balance placeholder is visible by default -->
+          <div class="balance-hidden-placeholder visible" id="hiddenBalancePlaceholder"></div>
+          
+          <!-- Loading skeleton (hidden by default) -->
+          <div class="skeleton skeleton-amount skeleton-hidden" id="skeletonAmount"></div>
+          
+          <button class="eye-btn" id="eyeBtn" aria-label="Toggle balance visibility">
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="#555555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Fuliza text is hidden by default via class "hidden" -->
+        <div class="fuliza-text hidden" id="fulizaText">Available Fuliza: Ksh 200.00</div>
+        
+        <!-- Hidden fuliza placeholder is visible by default -->
+        <div class="fuliza-hidden-placeholder visible" id="hiddenFulizaPlaceholder"></div>
+        
+        <!-- Loading skeleton (hidden by default) -->
+        <div class="skeleton skeleton-fuliza skeleton-hidden" id="skeletonFuliza"></div>
+        
+        <button class="view-statements-btn">View Statements</button>
+      </div>
+
+      <!-- Second Balance Card (partially visible) -->
+      <div class="balance-card secondary">
+        <div class="balance-label">My Balance</div>
+        <div style="font-size:14px; color:var(--text-secondary); margin-bottom:6px;">Airtime</div>
+        <div style="font-size:24px; font-weight:700; color:var(--text-primary);">Ksh. 0</div>
+        <div style="margin-top:auto; padding-top:10px;">
+          <div style="width:100%; height:40px; border-radius:10px; border:1.5px solid #E0E0E0;"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================
+       C. CAROUSEL INDICATORS
+       ============================================ -->
+  <div class="carousel-indicators">
+    <span class="indicator active"></span>
+    <span class="indicator inactive"></span>
+  </div>
+
+  <!-- ============================================
+       D. QUICK ACTIONS CARD
+       ============================================ -->
+  <div class="quick-actions-card">
+    <div class="quick-actions-header">
+      <span class="quick-actions-title">Quick Actions</span>
+      <a class="view-all" href="#" onclick="return false;">
+        View all
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="quick-actions-grid">
+      <!-- Send Money -->
+      <button class="quick-action-item" onclick="handleQuickAction('Send Money')">
+        <div class="qa-icon qa-icon-code1">
+          <img src="sendmoney.png" alt="Send Money" class="qa-icon-lg" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#35A853\' stroke-width=\'1.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M22 2L11 13\'/><path d=\'M22 2l-7 20-4-9-9-4 20-7z\'/><path d=\'M11 13l3-3\' stroke=\'#E31B3B\' stroke-width=\'1.5\'/></svg>';">
+        </div>
+        <span class="qa-label">Send<br>Money</span>
+      </button>
+
+      <!-- Lipa na M-PESA -->
+      <button class="quick-action-item" onclick="handleQuickAction('Lipa na M-PESA')">
+        <div class="qa-icon qa-icon-code1">
+          <img src="lipa.png" alt="Lipa na M-PESA" class="qa-icon-lg" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#35A853\' stroke-width=\'1.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M6 6h15l1.5 12.5a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2L5 6z\'/><path d=\'M6 6L5 2H2\' stroke=\'#E31B3B\' stroke-width=\'1.8\'/><path d=\'M9 10v6\' stroke=\'#35A853\' stroke-width=\'1.5\'/><path d=\'M15 10v6\' stroke=\'#35A853\' stroke-width=\'1.5\'/><circle cx=\'9\' cy=\'19\' r=\'1\' fill=\'#E31B3B\' stroke=\'none\'/><circle cx=\'15\' cy=\'19\' r=\'1\' fill=\'#E31B3B\' stroke=\'none\'/></svg>';">
+        </div>
+        <span class="qa-label">Lipa na<br>M-PESA</span>
+      </button>
+
+      <!-- Withdraw Money -->
+      <button class="quick-action-item" onclick="handleQuickAction('Withdraw Money')">
+        <div class="qa-icon">
+          <img src="withdraw.png" alt="Withdraw Money" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#35A853\' stroke-width=\'1.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><rect x=\'2\' y=\'6\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M6 10h4\' stroke=\'#35A853\' stroke-width=\'1.5\'/><path d=\'M6 14h2\' stroke=\'#35A853\' stroke-width=\'1.5\'/><path d=\'M18 8v8\' stroke=\'#E31B3B\' stroke-width=\'2.2\'/><path d=\'M15 13l3 3 3-3\' stroke=\'#E31B3B\' stroke-width=\'2.2\'/></svg>';">
+        </div>
+        <span class="qa-label">Withdraw<br>Money</span>
+      </button>
+
+      <!-- Pochi Wallet (round icon inside the container circle) -->
+      <button class="quick-action-item" onclick="handleQuickAction('Pochi Wallet')">
+        <div class="qa-icon" style="background:#E8F5E9;">
+          <img src="pochi.png" alt="Pochi Wallet" class="qa-icon-round" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#35A853\' stroke-width=\'1.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><circle cx=\'12\' cy=\'12\' r=\'10\' fill=\'#35A853\' stroke=\'none\'/><path d=\'M7 9c1.5-1.5 4-2 6-1\' stroke=\'#FFFFFF\' stroke-width=\'2\' fill=\'none\'/><path d=\'M17 15c-1.5 1.5-4 2-6 1\' stroke=\'#E31B3B\' stroke-width=\'2\' fill=\'none\'/><circle cx=\'12\' cy=\'12\' r=\'2\' fill=\'#FFFFFF\' stroke=\'none\'/></svg>';">
+        </div>
+        <span class="qa-label">Pochi<br>Wallet</span>
+      </button>
+
+      <!-- Buy Bundles -->
+      <button class="quick-action-item" onclick="handleQuickAction('Buy Bundles')">
+        <div class="qa-icon">
+          <img src="bundle.jpeg" alt="Buy Bundles" class="qa-icon-circle" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#35A853\' stroke-width=\'1.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M12 2v20\'/><path d=\'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6\'/><path d=\'M8 8l-4 4 4 4\' stroke=\'#E31B3B\' stroke-width=\'2\' fill=\'none\'/><path d=\'M16 8l4 4-4 4\' stroke=\'#E31B3B\' stroke-width=\'2\' fill=\'none\'/></svg>';">
+        </div>
+        <span class="qa-label">Buy<br>Bundles</span>
+      </button>
+
+      <!-- Airtime Top Up -->
+      <button class="quick-action-item" onclick="handleQuickAction('Airtime Top Up')">
+        <div class="qa-icon">
+          <img src="airtime.jpeg" alt="Airtime Top Up" class="qa-icon-circle" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#35A853\' stroke-width=\'1.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z\'/><path d=\'M16 2l-4 6 3 1-4 6\' stroke=\'#E31B3B\' stroke-width=\'2\' fill=\'none\'/></svg>';">
+        </div>
+        <span class="qa-label">Airtime<br>Top Up</span>
+      </button>
+
+      <!-- Tunukiwa Bundles -->
+      <button class="quick-action-item" onclick="handleQuickAction('Tunukiwa Bundles')">
+        <div class="qa-icon">
+          <img src="tunukiwa.png" alt="Tunukiwa Bundles" class="qa-icon-circle" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#35A853\' stroke-width=\'1.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'20 12 20 22 4 22 4 12\'/><rect x=\'2\' y=\'7\' width=\'20\' height=\'5\' rx=\'1\'/><line x1=\'12\' y1=\'22\' x2=\'12\' y2=\'7\'/><path d=\'M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z\'/><path d=\'M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z\'/><path d=\'M7 12h10\' stroke=\'#E31B3B\' stroke-width=\'1.5\'/><circle cx=\'12\' cy=\'15\' r=\'1\' fill=\'#E31B3B\' stroke=\'none\'/></svg>';">
+        </div>
+        <span class="qa-label">Tunukiwa<br>Bundles</span>
+      </button>
+
+      <!-- Home Internet -->
+      <button class="quick-action-item" onclick="handleQuickAction('Home Internet')">
+        <div class="qa-icon">
+          <img src="home.png" alt="Home Internet" class="qa-icon-circle" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#35A853\' stroke-width=\'1.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\'/><path d=\'M9.5 14.5a3.5 3.5 0 0 1 5 0\' stroke=\'#35A853\' stroke-width=\'1.5\'/><path d=\'M7.5 12.5a6 6 0 0 1 9 0\' stroke=\'#35A853\' stroke-width=\'1.5\'/><circle cx=\'12\' cy=\'17\' r=\'1\' fill=\'#E31B3B\' stroke=\'none\'/></svg>';">
+        </div>
+        <span class="qa-label">Home<br>Internet</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================
+       E. FREQUENTS CARD
+       ============================================ -->
+  <div class="frequents-card" id="frequentsToggle">
+    <span class="frequents-title">Frequents</span>
+    <div class="frequents-chevron" id="frequentsChevron">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#333333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+  <div class="frequents-content" id="frequentsContent">
+    <p>Your frequent transactions will appear here. Send money to your regular contacts quickly.</p>
+  </div>
+
+  <!-- ============================================
+       F. EXPLORE & DISCOVER DEALS
+       ============================================ -->
+  <div class="explore-section">
+    <span class="explore-title">Explore &amp; Discover Deals</span>
+    <span class="explore-emoji">🔥</span>
+  </div>
+
+  <!-- ============================================
+       G. DEAL BANNER
+       ============================================ -->
+  <div class="banner-wrapper" id="bannerWrapper">
+    <!-- Fallback if image not available -->
+    <div class="banner-fallback" id="bannerFallback">
+      <span>PATA MORE NA MY ONEAPP</span>
+    </div>
+    <img src="assets/deal-banner.jpg" alt="Deal Banner" class="banner-image" id="bannerImage"
+         onerror="this.style.display='none'; document.getElementById('bannerFallback').style.display='flex';"
+         onload="document.getElementById('bannerFallback').style.display='none';">
+  </div>
+
+  <!-- ============================================
+       H. SCAN TO PAY FLOATING BUTTON
+       ============================================ -->
+  <button class="scan-pay-btn" id="scanPayBtn" onclick="handleScanPay()">
+    <svg class="qr-icon" viewBox="0 0 28 28" fill="none">
+      <!-- QR Code icon with green/red -->
+      <rect x="2" y="2" width="8" height="8" rx="1.5" stroke="#35A853" stroke-width="1.8" fill="none"/>
+      <rect x="4" y="4" width="4" height="4" rx="0.5" fill="#35A853"/>
+      <rect x="18" y="2" width="8" height="8" rx="1.5" stroke="#E31B3B" stroke-width="1.8" fill="none"/>
+      <rect x="20" y="4" width="4" height="4" rx="0.5" fill="#E31B3B"/>
+      <rect x="2" y="18" width="8" height="8" rx="1.5" stroke="#E31B3B" stroke-width="1.8" fill="none"/>
+      <rect x="4" y="20" width="4" height="4" rx="0.5" fill="#E31B3B"/>
+      <rect x="18" y="18" width="8" height="8" rx="1.5" stroke="#35A853" stroke-width="1.8" fill="none"/>
+      <rect x="20" y="20" width="4" height="4" rx="0.5" fill="#35A853"/>
+      <rect x="12" y="2" width="4" height="4" rx="1" fill="#35A853"/>
+      <rect x="12" y="12" width="4" height="4" rx="1" fill="#E31B3B"/>
+      <rect x="12" y="22" width="4" height="4" rx="1" fill="#35A853"/>
+      <rect x="2" y="12" width="4" height="4" rx="1" fill="#E31B3B"/>
+      <rect x="22" y="12" width="4" height="4" rx="1" fill="#35A853"/>
+    </svg>
+    <span class="scan-text">Scan to pay</span>
+  </button>
+
+  <!-- ============================================
+       I. FLOATING ASSISTANT BUTTON
+       ============================================ -->
+  <button class="assistant-btn" id="assistantBtn" onclick="handleAssistant()">
+    <img src="assets/assistant.png" alt="Assistant"
+         onerror="this.style.display='none'; this.parentElement.querySelector('.assistant-placeholder').style.display='flex';">
+    <div class="assistant-placeholder" style="display:none;">👩🏾‍💼</div>
+  </button>
+
+</div>
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script>
+  (function() {
+    'use strict';
+
+    // ------------------------------------------
+    // State
+    // ------------------------------------------
+    // Balance is hidden by default
+    let balanceVisible = false;
+    let isLoading = false;
+
+    // DOM References
+    const balanceAmount = document.getElementById('balanceAmount');
+    const fulizaText = document.getElementById('fulizaText');
+    const hiddenBalancePlaceholder = document.getElementById('hiddenBalancePlaceholder');
+    const hiddenFulizaPlaceholder = document.getElementById('hiddenFulizaPlaceholder');
+    const skeletonAmount = document.getElementById('skeletonAmount');
+    const skeletonFuliza = document.getElementById('skeletonFuliza');
+    const eyeBtn = document.getElementById('eyeBtn');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    // ------------------------------------------
+    // 1. Balance Visibility Toggle
+    // ------------------------------------------
+    function toggleBalanceVisibility() {
+      if (isLoading) return; // Don't toggle while loading
+
+      balanceVisible = !balanceVisible;
+
+      if (balanceVisible) {
+        // Show actual balance
+        balanceAmount.classList.remove('hidden');
+        hiddenBalancePlaceholder.classList.remove('visible');
+        
+        fulizaText.classList.remove('hidden');
+        hiddenFulizaPlaceholder.classList.remove('visible');
+        
+        // Eye SLASHED icon — shown when balance is visible
+        eyeIcon.innerHTML = `
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+          <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+          <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        `;
+        eyeIcon.setAttribute('stroke', '#555555');
+      } else {
+        // Hide balance: show soft gray rounded placeholders
+        balanceAmount.classList.add('hidden');
+        hiddenBalancePlaceholder.classList.add('visible');
+        
+        fulizaText.classList.add('hidden');
+        hiddenFulizaPlaceholder.classList.add('visible');
+        
+        // Eye OPEN icon (no slash) — shown when balance is hidden
+        eyeIcon.innerHTML = `
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        `;
+        eyeIcon.setAttribute('stroke', '#555555');
+      }
+    }
+
+    // ------------------------------------------
+    // 2. Loading State Toggle
+    // ------------------------------------------
+    function setLoadingState(loading) {
+      isLoading = loading;
+
+      if (loading) {
+        // Hide all real and hidden content
+        balanceAmount.classList.add('hidden');
+        fulizaText.classList.add('hidden');
+        hiddenBalancePlaceholder.classList.remove('visible');
+        hiddenFulizaPlaceholder.classList.remove('visible');
+        
+        // Show skeleton loaders
+        skeletonAmount.classList.remove('skeleton-hidden');
+        skeletonFuliza.classList.remove('skeleton-hidden');
+        
+        // Keep eye visible (per screenshot)
+      } else {
+        // Hide skeleton loaders
+        skeletonAmount.classList.add('skeleton-hidden');
+        skeletonFuliza.classList.add('skeleton-hidden');
+        
+        // Restore correct state based on balanceVisible
+        if (balanceVisible) {
+          balanceAmount.classList.remove('hidden');
+          hiddenBalancePlaceholder.classList.remove('visible');
+          
+          fulizaText.classList.remove('hidden');
+          hiddenFulizaPlaceholder.classList.remove('visible');
+        } else {
+          balanceAmount.classList.add('hidden');
+          hiddenBalancePlaceholder.classList.add('visible');
+          
+          fulizaText.classList.add('hidden');
+          hiddenFulizaPlaceholder.classList.add('visible');
+        }
+      }
+    }
+
+    // Expose to window for manual testing
+    window.setLoadingState = setLoadingState;
+    window.toggleBalanceVisibility = toggleBalanceVisibility;
+
+    // ------------------------------------------
+    // 3. Balance Carousel
+    // ------------------------------------------
+    const track = document.getElementById('carouselTrack');
+    track.addEventListener('scroll', function() {
+      const indicators = document.querySelectorAll('.indicator');
+      const cardWidth = track.querySelector('.balance-card').offsetWidth + 10; // gap
+      const index = Math.round(track.scrollLeft / cardWidth);
+      indicators.forEach((ind, i) => {
+        if (i === index) {
+          ind.classList.add('active');
+          ind.classList.remove('inactive');
+        } else {
+          ind.classList.remove('active');
+          ind.classList.add('inactive');
+        }
+      });
+    }, { passive: true });
+
+    // ------------------------------------------
+    // 4. Quick Action Buttons
+    // ------------------------------------------
+    window.handleQuickAction = function(actionName) {
+      console.log('Quick Action:', actionName);
+    };
+
+    // ------------------------------------------
+    // 5. Frequents Expand/Collapse
+    // ------------------------------------------
+    const frequentsToggle = document.getElementById('frequentsToggle');
+    const frequentsContent = document.getElementById('frequentsContent');
+    const frequentsChevron = document.getElementById('frequentsChevron');
+
+    frequentsToggle.addEventListener('click', function() {
+      const isOpen = frequentsContent.classList.contains('open');
+      if (isOpen) {
+        frequentsContent.classList.remove('open');
+        frequentsChevron.classList.remove('open');
+      } else {
+        frequentsContent.classList.add('open');
+        frequentsChevron.classList.add('open');
+      }
+    });
+
+    // ------------------------------------------
+    // 6. Scan to Pay
+    // ------------------------------------------
+    window.handleScanPay = function() {
+      console.log('Scan to pay clicked');
+    };
+
+    // ------------------------------------------
+    // 7. Assistant Button
+    // ------------------------------------------
+    window.handleAssistant = function() {
+      console.log('Assistant clicked');
+    };
+
+    // ------------------------------------------
+    // 8. Eye button event
+    // ------------------------------------------
+    eyeBtn.addEventListener('click', toggleBalanceVisibility);
+
+    // ------------------------------------------
+    // 9. Initial state
+    // ------------------------------------------
+    // Set loading to false (which respects the initial balanceVisible = false)
+    setLoadingState(false);
+
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter M-PESA PIN</title>
+    <style>
+        :root {
+            --bg-color: #fcfbf7;
+            --text-main: #1f2421;
+            --text-muted: #5f6368;
+            --banner-bg: #e6f4ea;
+            --banner-text: #137333;
+            --banner-border: #ceead6;
+            --pin-border: #dadce0;
+            --pin-focus: #137333;
+            --keypad-active: rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 850px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 24px 24px 24px;
+            background-color: var(--bg-color);
+            position: relative;
+        }
+
+        .top-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: #f3e8f5;
+            color: #8e24aa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .username {
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .phone {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .banner {
+            display: flex;
+            align-items: center;
+            background-color: var(--banner-bg);
+            border: 1px solid var(--banner-border);
+            padding: 10px 16px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 360px;
+            margin-bottom: 24px;
+        }
+
+        .banner-icon {
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            color: var(--banner-text);
+        }
+
+        .banner-text {
+            font-size: 13px;
+            color: var(--banner-text);
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .pin-inputs {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .pin-box {
+            width: 48px;
+            height: 52px;
+            border: 1.5px solid var(--pin-border);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background: transparent;
+            transition: border-color 0.2s;
+        }
+
+        .pin-box.filled {
+            border-color: var(--text-main);
+        }
+
+        .pin-dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--text-main);
+            border-radius: 50%;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            width: 100%;
+            max-width: 340px;
+            gap: 8px 24px;
+            margin-bottom: 10px;
+        }
+
+        .key {
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--text-main);
+            height: 56px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.15s;
+        }
+
+        .key:active {
+            background-color: var(--keypad-active);
+        }
+
+        .key svg {
+            width: 26px;
+            height: 26px;
+            fill: var(--text-main);
+        }
+
+        .key img.fingerprint-img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            display: block;
+        }
+
+        @media (max-height: 700px) {
+            .container {
+                padding: 16px;
+            }
+            h1 {
+                margin-bottom: 16px;
+            }
+            .banner {
+                margin-bottom: 16px;
+            }
+            .key {
+                height: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-section">
+            <h1>Enter your M-PESA PIN</h1>
+            
+            <div class="avatar">DY</div>
+            
+            <div class="username">Dickson Yegon</div>
+            <div class="phone">011****26</div>
+
+            <div class="banner">
+                <div class="banner-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"></path>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="banner-text">This app will not use any of your data bundles</div>
+            </div>
+
+            <div class="pin-inputs" id="pinContainer">
+                <div class="pin-box"></div>
+                <div class="pin-box"></div>
+                <div class="pin-box"></div>
+                <div class="pin-box"></div>
+            </div>
+        </div>
+
+        <div class="keypad">
+            <button class="key" data-value="1">1</button>
+            <button class="key" data-value="2">2</button>
+            <button class="key" data-value="3">3</button>
+            <button class="key" data-value="4">4</button>
+            <button class="key" data-value="5">5</button>
+            <button class="key" data-value="6">6</button>
+            <button class="key" data-value="7">7</button>
+            <button class="key" data-value="8">8</button>
+            <button class="key" data-value="9">9</button>
+            <button class="key" id="biometricBtn" title="Biometric Login">
+                <img src="finger.png" alt="Fingerprint" class="fingerprint-img">
+            </button>
+            <button class="key" data-value="0">0</button>
+            <button class="key" id="deleteBtn" title="Delete">
+                <svg viewBox="0 0 24 24">
+                    <path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9 .89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.67-7H22v14zm-11.59-9.41L13 11.59l2.59-2.6c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41L14.41 13l2.6 2.59c.39.39.39 1.02 0 1.41-.39.39-1.02.39-1.41 0L13 14.41l-2.59 2.6c-.39.39-1.02.39-1.41 0-.39-.39-.39-1.02 0-1.41L11.59 13 9 10.41c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let pin = [];
+        const maxPinLength = 4;
+        const pinBoxes = document.querySelectorAll('.pin-box');
+        const keys = document.querySelectorAll('.key[data-value]');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const biometricBtn = document.getElementById('biometricBtn');
+
+        function updatePinDisplay() {
+            pinBoxes.forEach((box, index) => {
+                box.innerHTML = '';
+                if (index < pin.length) {
+                    const dot = document.createElement('div');
+                    dot.className = 'pin-dot';
+                    box.appendChild(dot);
+                    box.classList.add('filled');
+                } else {
+                    box.classList.remove('filled');
+                }
+            });
+
+            if (pin.length === maxPinLength) {
+                setTimeout(() => {
+                    alert('PIN entered successfully! Processing transaction...');
+                    pin = [];
+                    updatePinDisplay();
+                }, 200);
+            }
+        }
+
+        keys.forEach(key => {
+            key.addEventListener('click', () => {
+                if (pin.length < maxPinLength) {
+                    pin.push(key.getAttribute('data-value'));
+                    updatePinDisplay();
+                }
+            });
+        });
+
+        deleteBtn.addEventListener('click', () => {
+            if (pin.length > 0) {
+                pin.pop();
+                updatePinDisplay();
+            }
+        });
+
+        biometricBtn.addEventListener('click', () => {
+            alert('Biometric authentication triggered.');
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9') {
+                if (pin.length < maxPinLength) {
+                    pin.push(e.key);
+                    updatePinDisplay();
+                }
+            } else if (e.key === 'Backspace') {
+                if (pin.length > 0) {
+                    pin.pop();
+                    updatePinDisplay();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
