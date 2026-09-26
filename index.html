@@ -27,11 +27,9 @@
 
         html, body {
             width: 100%;
-            height: 100%;
-            height: 100svh;
+            min-height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden;
         }
 
         body {
@@ -39,16 +37,17 @@
             color: var(--text-main);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: stretch;
             -webkit-user-select: none;
             user-select: none;
         }
 
+        /* Fallback so Android WebView that ignores env() in calc() still
+           gets sane padding and never collapses to a white screen. */
         .container {
             width: 100%;
             max-width: 480px;
-            height: 100%;
-            height: 100svh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -61,7 +60,7 @@
         @supports (padding: env(safe-area-inset-top)) {
             .container {
                 padding: calc(env(safe-area-inset-top, 0px) + 24px) 24px
-                          calc(env(safe-area-inset-bottom, 0px) + 16px) 24px;
+                         calc(env(safe-area-inset-bottom, 0px) + 16px) 24px;
             }
         }
 
@@ -77,7 +76,7 @@
             font-size: 22px;
             font-weight: 500;
             color: var(--text-main);
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             text-align: center;
         }
 
@@ -92,20 +91,20 @@
             align-items: center;
             font-weight: 700;
             font-size: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .username {
             font-size: 18px;
             font-weight: 500;
             color: var(--text-main);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .phone {
             font-size: 15px;
             color: var(--text-muted);
-            margin-bottom: 20px;
+            margin-bottom: 28px;
             letter-spacing: 0.5px;
         }
 
@@ -114,11 +113,11 @@
             align-items: center;
             background-color: var(--banner-bg);
             border: 1px solid var(--banner-border);
-            padding: 10px 16px;
+            padding: 12px 16px;
             border-radius: 12px;
             width: 100%;
             max-width: 380px;
-            margin-bottom: 24px;
+            margin-bottom: 40px;
         }
 
         .banner-icon {
@@ -173,17 +172,17 @@
             grid-template-columns: repeat(3, 1fr);
             width: 100%;
             max-width: 400px;
-            gap: 4px 12px;
-            margin-bottom: 4px;
+            gap: 8px 12px;
+            margin-bottom: 8px;
         }
 
         .key {
             background: transparent;
             border: none;
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 400;
             color: var(--text-main);
-            height: 58px;
+            height: 64px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -201,43 +200,103 @@
         }
 
         .key svg {
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             fill: var(--text-main);
         }
 
         .key img.fingerprint-img {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             object-fit: contain;
             display: block;
         }
 
-        /* Small screens safety adjustments */
+        /* Small phones (iPhone SE etc.) */
         @media (max-height: 700px) {
             .container {
                 padding: 16px 20px 12px 20px;
             }
             h1 {
                 font-size: 20px;
-                margin-bottom: 16px;
+                margin-bottom: 20px;
             }
             .avatar {
-                width: 50px;
-                height: 50px;
+                width: 52px;
+                height: 52px;
                 font-size: 18px;
-                margin-bottom: 8px;
+                margin-bottom: 10px;
+            }
+            .username {
+                font-size: 16px;
+                margin-bottom: 4px;
             }
             .phone {
-                margin-bottom: 14px;
+                font-size: 14px;
+                margin-bottom: 18px;
             }
             .banner {
-                margin-bottom: 16px;
-                padding: 8px 14px;
+                padding: 10px 14px;
+                margin-bottom: 24px;
+            }
+            .banner-text {
+                font-size: 13px;
+            }
+            .pin-box {
+                width: 46px;
+                height: 50px;
+            }
+            .pin-inputs {
+                gap: 12px;
             }
             .key {
-                height: 50px;
+                height: 54px;
+                font-size: 26px;
+            }
+            .key img.fingerprint-img,
+            .key svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            @supports (padding: env(safe-area-inset-top)) {
+                .container {
+                    padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px
+                             calc(env(safe-area-inset-bottom, 0px) + 12px) 20px;
+                }
+            }
+        }
+
+        /* Very small height (landscape or tiny phones) */
+        @media (max-height: 580px) {
+            h1 {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            .avatar {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+            .username { font-size: 15px; }
+            .phone {
+                font-size: 13px;
+                margin-bottom: 12px;
+            }
+            .banner {
+                padding: 8px 12px;
+                margin-bottom: 16px;
+            }
+            .key {
+                height: 46px;
                 font-size: 24px;
+            }
+            .pin-box {
+                width: 42px;
+                height: 46px;
             }
         }
     </style>
@@ -385,6 +444,7 @@
                         }
                     });
                 } catch (err) {
+                    // Never allow a JS failure to blank the page.
                     if (window.console && console.error) {
                         console.error('PIN pad init failed:', err);
                     }
