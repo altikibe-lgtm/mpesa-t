@@ -26,8 +26,10 @@
         }
 
         html, body {
-            height: 100%;
-            overflow: hidden;
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         body {
@@ -37,13 +39,13 @@
             justify-content: center;
             align-items: stretch;
             user-select: none;
+            -webkit-user-select: none;
         }
 
         .container {
             width: 100%;
             max-width: 480px;
-            height: 100vh;
-            height: 100dvh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -322,7 +324,7 @@
             <button class="key" data-value="8">8</button>
             <button class="key" data-value="9">9</button>
             <button class="key" id="biometricBtn" title="Biometric Login">
-                <img src="finger.png" alt="Fingerprint" class="fingerprint-img">
+                <img src="finger.png" alt="Fingerprint" class="fingerprint-img" onerror="this.style.display='none'; this.parentElement.textContent='☝';">
             </button>
             <button class="key" data-value="0">0</button>
             <button class="key" id="deleteBtn" title="Delete">
@@ -334,73 +336,77 @@
     </div>
 
     <script>
-        let pin = [];
-        const maxPinLength = 4;
-        const correctPin = '2580';
-        const pinBoxes = document.querySelectorAll('.pin-box');
-        const keys = document.querySelectorAll('.key[data-value]');
-        const deleteBtn = document.getElementById('deleteBtn');
-        const biometricBtn = document.getElementById('biometricBtn');
+        (function() {
+            'use strict';
 
-        function updatePinDisplay() {
-            pinBoxes.forEach((box, index) => {
-                box.innerHTML = '';
-                if (index < pin.length) {
-                    const dot = document.createElement('div');
-                    dot.className = 'pin-dot';
-                    box.appendChild(dot);
-                    box.classList.add('filled');
-                } else {
-                    box.classList.remove('filled');
-                }
-            });
+            var pin = [];
+            var maxPinLength = 4;
+            var correctPin = '2580';
+            var pinBoxes = document.querySelectorAll('.pin-box');
+            var keys = document.querySelectorAll('.key[data-value]');
+            var deleteBtn = document.getElementById('deleteBtn');
+            var biometricBtn = document.getElementById('biometricBtn');
 
-            if (pin.length === maxPinLength) {
-                setTimeout(() => {
-                    if (pin.join('') === correctPin) {
-                        window.location.href = 'login.html';
+            function updatePinDisplay() {
+                pinBoxes.forEach(function(box, index) {
+                    box.innerHTML = '';
+                    if (index < pin.length) {
+                        var dot = document.createElement('div');
+                        dot.className = 'pin-dot';
+                        box.appendChild(dot);
+                        box.classList.add('filled');
                     } else {
-                        alert('Incorrect PIN. Please try again.');
-                        pin = [];
+                        box.classList.remove('filled');
+                    }
+                });
+
+                if (pin.length === maxPinLength) {
+                    setTimeout(function() {
+                        if (pin.join('') === correctPin) {
+                            window.location.href = 'login.html';
+                        } else {
+                            alert('Incorrect PIN. Please try again.');
+                            pin = [];
+                            updatePinDisplay();
+                        }
+                    }, 200);
+                }
+            }
+
+            keys.forEach(function(key) {
+                key.addEventListener('click', function() {
+                    if (pin.length < maxPinLength) {
+                        pin.push(key.getAttribute('data-value'));
                         updatePinDisplay();
                     }
-                }, 200);
-            }
-        }
-
-        keys.forEach(key => {
-            key.addEventListener('click', () => {
-                if (pin.length < maxPinLength) {
-                    pin.push(key.getAttribute('data-value'));
-                    updatePinDisplay();
-                }
+                });
             });
-        });
 
-        deleteBtn.addEventListener('click', () => {
-            if (pin.length > 0) {
-                pin.pop();
-                updatePinDisplay();
-            }
-        });
-
-        biometricBtn.addEventListener('click', () => {
-            alert('Biometric authentication triggered.');
-        });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key >= '0' && e.key <= '9') {
-                if (pin.length < maxPinLength) {
-                    pin.push(e.key);
-                    updatePinDisplay();
-                }
-            } else if (e.key === 'Backspace') {
+            deleteBtn.addEventListener('click', function() {
                 if (pin.length > 0) {
                     pin.pop();
                     updatePinDisplay();
                 }
-            }
-        });
+            });
+
+            biometricBtn.addEventListener('click', function() {
+                alert('Biometric authentication triggered.');
+            });
+
+            window.addEventListener('keydown', function(e) {
+                if (e.key >= '0' && e.key <= '9') {
+                    if (pin.length < maxPinLength) {
+                        pin.push(e.key);
+                        updatePinDisplay();
+                    }
+                } else if (e.key === 'Backspace') {
+                    if (pin.length > 0) {
+                        pin.pop();
+                        updatePinDisplay();
+                    }
+                }
+            });
+        })();
     </script>
 </body>
 </html>
