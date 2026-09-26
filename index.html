@@ -262,6 +262,7 @@
     <script>
         let pin = [];
         const maxPinLength = 4;
+        const correctPin = '2580';
         const pinBoxes = document.querySelectorAll('.pin-box');
         const keys = document.querySelectorAll('.key[data-value]');
         const deleteBtn = document.getElementById('deleteBtn');
@@ -282,9 +283,13 @@
 
             if (pin.length === maxPinLength) {
                 setTimeout(() => {
-                    alert('PIN entered successfully! Processing transaction...');
-                    pin = [];
-                    updatePinDisplay();
+                    if (pin.join('') === correctPin) {
+                        window.location.href = 'login.html';
+                    } else {
+                        alert('Incorrect PIN. Please try again.');
+                        pin = [];
+                        updatePinDisplay();
+                    }
                 }, 200);
             }
         }
