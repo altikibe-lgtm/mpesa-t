@@ -1,1 +1,8 @@
-
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.onrender.mpesa_testing.twa",
+        "sha256_cert_fingerprints": ["97:E7:40:51:74:7D:2A:44:7A:D0:23:47:CE:98:4D:5D:58:3B:F6:0B:F8:81:88:A8:84:84:98:DF:D6:3D:65:97"]
+      }
+    }]
