@@ -108,6 +108,7 @@
             letter-spacing: 0.5px;
         }
 
+        /* Banner: forces text onto ONE single line, always. */
         .banner {
             display: flex;
             align-items: center;
@@ -118,6 +119,8 @@
             width: 100%;
             max-width: 380px;
             margin-bottom: 40px;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         .banner-icon {
@@ -128,11 +131,17 @@
             flex-shrink: 0;
         }
 
+        /* Banner text: never wraps, shrinks if needed. */
         .banner-text {
             font-size: 14px;
             color: var(--banner-text);
             font-weight: 500;
             line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1 1 auto;
+            min-width: 0;
         }
 
         .pin-inputs {
@@ -240,7 +249,7 @@
                 margin-bottom: 24px;
             }
             .banner-text {
-                font-size: 13px;
+                font-size: 12px;
             }
             .pin-box {
                 width: 46px;
@@ -290,6 +299,9 @@
                 padding: 8px 12px;
                 margin-bottom: 16px;
             }
+            .banner-text {
+                font-size: 11px;
+            }
             .key {
                 height: 46px;
                 font-size: 24px;
@@ -297,6 +309,13 @@
             .pin-box {
                 width: 42px;
                 height: 46px;
+            }
+        }
+
+        /* Ultra-narrow phones: shrink banner text so it still fits on one line */
+        @media (max-width: 360px) {
+            .banner-text {
+                font-size: 11px;
             }
         }
     </style>
