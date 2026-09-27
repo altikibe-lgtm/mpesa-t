@@ -10,5 +10,17 @@
   "theme_color": "#00a651",
   "id": "https://mpesa-testing.onrender.com/",
   "description": "one app",
-  "lang": "en"
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/launchericon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/launchericon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
