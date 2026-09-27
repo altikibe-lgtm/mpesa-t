@@ -1,0 +1,14 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "One App",
+  "orientation": "portrait",
+  "scope": "/",
+  "short_name": "One App",
+  "start_url": "/index.html",
+  "theme_color": "#00a651",
+  "id": "https://mpesa-testing.onrender.com/",
+  "description": "one app",
+  "lang": "en"
+}
