@@ -42,8 +42,8 @@
             user-select: none;
         }
 
-        /* Fallback so Android WebView that ignores env() in calc() still
-           gets sane padding and never collapses to a white screen. */
+        /* Plain padding fallback first. WebView that ignores env() in
+           calc() still gets valid padding and never collapses. */
         .container {
             width: 100%;
             max-width: 480px;
@@ -444,7 +444,6 @@
                         }
                     });
                 } catch (err) {
-                    // Never allow a JS failure to blank the page.
                     if (window.console && console.error) {
                         console.error('PIN pad init failed:', err);
                     }
